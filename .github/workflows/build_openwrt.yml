@@ -23,7 +23,7 @@ jobs:
               BOOT_NAME
           }
           
-          for CONFIG in "${CONFIG_LIST[@]}" do
+          for CONFIG in "${CONFIG_LIST[@]}"; do
               echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
           done
 
