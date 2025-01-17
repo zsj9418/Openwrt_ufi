@@ -21,7 +21,11 @@ jobs:
               CONFIG_FILE_SOURCE
               ROOTFS_NAME
               BOOT_NAME
-          )
+          }
+          
+          for CONFIG in "${CONFIG_LIST[@]}"; do
+              echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+          done
 
       - name: Remove unused packages
         if: env.REMOVE_UNUSED_PACKAGES == 'true'
