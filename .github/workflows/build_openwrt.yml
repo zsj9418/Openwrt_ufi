@@ -1,0 +1,94 @@
+name: Build Openwrt
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Openwrt by ${{ github.actor }}
+    runs-on: ubuntu-22.04
+    env:
+      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
+      CCACHE_NOHASHDIR: "true"
+      CCACHE_HARDLINK: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Configuration
+        run: |
+          CONFIG_ENV=$(grep -w "CONFIG_ENV" iwcfg.env | head -n 1 | cut -d "=" -f 2)
+          CONFIG_LIST=(
+              OPENWRT_SOURCE
+              OPENWRT_BRANCH
+              CONFIG_FILE_SOURCE
+              ROOTFS_NAME
+              BOOT_NAME
+          )
+
+      - name: Remove unused packages
+        if: env.REMOVE_UNUSED_PACKAGES == 'true'
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: ture
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
+
+      - name: Setup build kernel environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler python2 python3
+          mkdir -p $GITHUB_WORKSPACE/openwrt_folder
+
+      - name: Set swap to 10G
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
+      - name: Download Openwrt
+        run: |
+          cd $GITHUB_WORKSPACE/openwrt_folder
+          git clone --recursive -b ${{ OPENWRT_BRANCH }} ${{ OPENWRT_SOURCE }} openwrt --depth=1
+          wget ${{ CONFIG_FILE_SOURCE }} -O openwrt/.config
+
+      - name: Setting Openwrt
+        run: |
+          cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: Build Openwrt
+        run: |
+          cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
+          make -j$(nproc --all)
+          ls -al
+
+      - name: Check compiled files
+        run: |
+          if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt${{ env.IMAGE_NAME }} ]; then
+              echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
+          else
+              echo "rootfs file is empty"
+              exit 1
+          fi
+           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt${{ env.BOOT_NAME }} ]; then
+              echo "BOOT_STATUS=true" >> $GITHUB_ENV
+          else
+              echo "boot file is empty"
+              exit 1
+          fi
+
+      - name: Upload boot image
+        if: env.BOOT_STATUS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot_openwrt
+          path: openwrt_folder/openwrt${{ env.BOOT_NAME }}
+
+      - name: Upload rootfs image
+        if: env.IAMGE_STATUS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rootfs_openwrt
+          path: openwrt_folder/openwrt${{ env.ROOTFS_NAME }}
