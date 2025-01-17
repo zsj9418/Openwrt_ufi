@@ -49,8 +49,8 @@ jobs:
       - name: Download Openwrt
         run: |
           cd $GITHUB_WORKSPACE/openwrt_folder
-          git clone --recursive -b ${{ OPENWRT_BRANCH }} ${{ OPENWRT_SOURCE }} openwrt --depth=1
-          wget ${{ CONFIG_FILE_SOURCE }} -O openwrt/.config
+          git clone --recursive ${{ env.OPENWRT_SOURCE }} -b ${{ env.OPENWRT_BRANCH }} openwrt --depth=1
+          wget ${{ env.CONFIG_FILE_SOURCE }} -O openwrt/.config
 
       - name: Setting Openwrt
         run: |
