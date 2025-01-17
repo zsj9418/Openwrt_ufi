@@ -18,15 +18,10 @@ jobs:
               ROOTFS_NAME
               BOOT_NAME
               REMOVE_UNUSED_PACKAGES
-
           }
           
-          for CONFIG in "${CONFIG_LIST[@]}"; do
-              if [[ "$CONFIG" == "EXTRA_CMDS" || "$CONFIG" == "CUSTOM_CMDS" ]]; then
-                  echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d ":" -f 2)" >> $GITHUB_ENV
-              else
-                  echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
-              fi
+          for CONFIG in ${CONFIG_LIST[@]} do
+              echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
           done
 
       - name: Remove unused packages
