@@ -6,24 +6,23 @@ jobs:
   build:
     name: Build Openwrt by ${{ github.actor }}
     runs-on: ubuntu-22.04
-    env:
-      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
-      CCACHE_NOHASHDIR: "true"
-      CCACHE_HARDLINK: "true"
     steps:
       - uses: actions/checkout@v4
       - name: Prepare Configuration
         run: |
-          CONFIG_ENV=$(grep -w "CONFIG_ENV" iwcfg.env | head -n 1 | cut -d "=" -f 2)
+          CONFIG_ENV=$(grep -w "CONFIG_ENV" config.env | head -n 1 | cut -d "=" -f 2)
           CONFIG_LIST=(
               OPENWRT_SOURCE
               OPENWRT_BRANCH
               CONFIG_FILE_SOURCE
               ROOTFS_NAME
               BOOT_NAME
+              REMOVE_UNUSED_PACKAGES
+              BOOT_STATUS
+              IAMGE_STATUS
           }
           
-          for CONFIG in "${CONFIG_LIST[@]}" do
+          for CONFIG in "${CONFIG_LIST[@]}"; do
               echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
           done
 
