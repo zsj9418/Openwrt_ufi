@@ -63,8 +63,10 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           # make -j$(nproc --all)
-          make -j1
+          make download -j$(nproc --all) V=s
+          make -j$(nproc --all)
           ls -al
+          ls -al ../
 
       - name: Check compiled files
         run: |
