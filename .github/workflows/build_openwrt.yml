@@ -64,7 +64,8 @@ jobs:
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           # make -j$(nproc --all)
           make download -j$(nproc --all) V=s
-          make -j$(nproc --all)
+          # make -j$(nproc --all)
+          make -j1 V=s
           ls -al
           ls -al ../
 
