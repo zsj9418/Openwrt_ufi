@@ -62,9 +62,6 @@ jobs:
           mv tools/mkbootimg.py tools/mkbootimg
           mv tools/repack_bootimg.py tools/repack_bootimg
           mv tools/unpack_bootimg.py tools/unpack_bootimg
-          export PATH=$GITHUB_WORKSPACE/openwrt_folder/tools:$PATH
-          echo `unpack_bootimg --boot_img=Kernel_Source_IMGs/boot_$ROM_CURRENT.img --format mkbootimg`
-          exit 1
           
       - name: Setting Openwrt
         run: |
@@ -83,10 +80,8 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           export PATH=$GITHUB_WORKSPACE/openwrt_folder/tools:$PATH
-          export CC="ccache gcc"
-          export CXX="ccache g++"
           make download -j$(nproc --all) V=s
-          make -j1 V=s
+          make CC="ccache gcc" CXX="ccache g++" -j1 V=s
           ls -al
           echo "====="
           ls -al ../
