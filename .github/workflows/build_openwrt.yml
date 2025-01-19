@@ -53,6 +53,12 @@ jobs:
           git clone --recursive ${{ env.OPENWRT_SOURCE }} -b ${{ env.OPENWRT_BRANCH }} openwrt --depth=1
           wget ${{ env.CONFIG_FILE_SOURCE }} -O openwrt/.config
 
+      - name: Download mkbootimg tools
+        if: env.BUILD_BOOT_IMG == 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/openwrt_folder
+          git clone https://android.googlesource.com/platform/system/tools/mkbootimg tools -b master-kernel-build-2022 --depth=1
+          
       - name: Setting Openwrt
         run: |
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
@@ -62,12 +68,9 @@ jobs:
       - name: Build Openwrt
         run: |
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
-          # make -j$(nproc --all)
+          export PATH=$GITHUB_WORKSPACE/openwrt_folder/tools:$PATH
           make download -j$(nproc --all) V=s
-          # make -j$(nproc --all)
           make -j1 V=s
-          ls -al
-          ls -al ../
 
       - name: Check compiled files
         run: |
