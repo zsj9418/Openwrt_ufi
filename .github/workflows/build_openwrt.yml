@@ -86,7 +86,8 @@ jobs:
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           export PATH=$GITHUB_WORKSPACE/openwrt_folder/tools:$PATH
           make download -j$(nproc --all) V=s
-          make CC="ccache gcc" CXX="ccache g++" -j1 V=s
+          # make CC="ccache gcc" CXX="ccache g++" -j1 V=s
+          make CC="ccache gcc" CXX="ccache g++" -j$(nproc --all) V=s
           ls -al
           echo "====="
           ls -al ../
