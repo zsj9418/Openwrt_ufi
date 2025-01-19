@@ -18,6 +18,7 @@ jobs:
               ROOTFS_NAME
               BOOT_NAME
               REMOVE_UNUSED_PACKAGES
+              ENABLE_CCACHE
           )
           
           for CONFIG in "${CONFIG_LIST[@]}"; do
