@@ -86,23 +86,18 @@ jobs:
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           export PATH=$GITHUB_WORKSPACE/openwrt_folder/tools:$PATH
           make download -j$(nproc --all) V=s
-          make CC="ccache gcc" CXX="ccache g++" -j1 V=s
-          # make CC="ccache gcc" CXX="ccache g++" -j$(nproc --all) V=s
-          ls -al
-          echo "====="
-          ls -al ../
-          echo "====="
-          ls -al out
+          # make CC="ccache gcc" CXX="ccache g++" -j1 V=s
+          make CC="ccache gcc" CXX="ccache g++" -j$(nproc --all) V=s
 
       - name: Check compiled files
         run: |
-          if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt${{ env.IMAGE_NAME }} ]; then
+          if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.IMAGE_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
               echo "rootfs file is empty"
               exit 1
           fi
-           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt${{ env.BOOT_NAME }} ]; then
+           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.BOOT_NAME }} ]; then
               echo "BOOT_STATUS=true" >> $GITHUB_ENV
           else
               echo "boot file is empty"
@@ -114,11 +109,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: boot_openwrt
-          path: openwrt_folder/openwrt${{ env.BOOT_NAME }}
+          path: openwrt_folder/bin/targets/msm89xx/msm8916/${{ env.BOOT_NAME }}
 
       - name: Upload rootfs image
         if: env.IAMGE_STATUS == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: rootfs_openwrt
-          path: openwrt_folder/openwrt${{ env.ROOTFS_NAME }}
+          name: rootfs_openwrt.gz
+          path: openwrt_folder/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }}
