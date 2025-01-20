@@ -91,7 +91,12 @@ jobs:
 
       - name: Check compiled files
         run: |
-          ls -al bin/target
+          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/target/
+          echo "=========="
+          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/
+          echo "=========="
+          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/
+          echo "=========="
           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
