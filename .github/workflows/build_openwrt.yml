@@ -91,7 +91,8 @@ jobs:
 
       - name: Check compiled files
         run: |
-          if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.IMAGE_NAME }} ]; then
+          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/
+          if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
               echo "rootfs file is empty"
