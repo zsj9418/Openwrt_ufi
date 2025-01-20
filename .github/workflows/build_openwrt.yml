@@ -69,10 +69,10 @@ jobs:
           cd $GITHUB_WORKSPACE/openwrt_folder/openwrt
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          # echo >> feeds.conf.default
-          # echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
-          # ./scripts/feeds update istore
-          # ./scripts/feeds install -d y -p istore luci-app-store
+          echo >> feeds.conf.default
+          echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+          ./scripts/feeds update istore
+          ./scripts/feeds install -d y -p istore luci-app-store
 
       - name: Setup ccache
         if: env.ENABLE_CCACHE == 'true'
@@ -91,8 +91,7 @@ jobs:
 
       - name: Check compiled files
         run: |
-          sudo find $GITHUB_WORKSPACE/openwrt_folder/ -name "*.img"
-          sudo find $GITHUB_WORKSPACE/openwrt_folder/ -name "*.gz"
+          ls -al bin/target
           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
