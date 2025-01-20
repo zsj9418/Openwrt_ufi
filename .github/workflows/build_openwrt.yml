@@ -91,7 +91,8 @@ jobs:
 
       - name: Check compiled files
         run: |
-          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/
+          sudo find $GITHUB_WORKSPACE/openwrt_folder/ -name "*.img"
+          sudo find $GITHUB_WORKSPACE/openwrt_folder/ -name "*.gz"
           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
