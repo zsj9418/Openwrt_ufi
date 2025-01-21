@@ -89,7 +89,7 @@ jobs:
 
       - name: Check compiled files
         run: |
-          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/target/
+          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/
           echo "=========="
           ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/
           echo "=========="
