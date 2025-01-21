@@ -110,7 +110,7 @@ jobs:
           path: openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.BOOT_NAME }}
 
       - name: Upload rootfs image
-        if: env.IAMGE_STATUS == 'true'
+        if: env.ROOTFS_STATUS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: rootfs_openwrt
