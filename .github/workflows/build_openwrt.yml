@@ -119,5 +119,5 @@ jobs:
         if: env.IAMGE_STATUS == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: rootfs_openwrt.gz
+          name: rootfs_openwrt
           path: openwrt_folder/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }}
