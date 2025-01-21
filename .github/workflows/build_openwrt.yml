@@ -89,12 +89,6 @@ jobs:
 
       - name: Check compiled files
         run: |
-          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/
-          echo "=========="
-          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/
-          echo "=========="
-          ls -al $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/
-          echo "=========="
           if [ -f $GITHUB_WORKSPACE/openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }} ]; then
               echo "ROOTFS_STATUS=true" >> $GITHUB_ENV
           else
@@ -113,11 +107,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: boot_openwrt
-          path: openwrt_folder/bin/targets/msm89xx/msm8916/${{ env.BOOT_NAME }}
+          path: openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.BOOT_NAME }}
 
       - name: Upload rootfs image
         if: env.IAMGE_STATUS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: rootfs_openwrt
-          path: openwrt_folder/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }}
+          path: openwrt_folder/openwrt/bin/targets/msm89xx/msm8916/${{ env.ROOTFS_NAME }}
